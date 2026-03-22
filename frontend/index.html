@@ -18,7 +18,28 @@
                 <label for="answers-file">Answers Excel (.xlsx):</label>
                 <input type="file" id="answers-file" accept=".xlsx">
             </div>
-            <button id="start-btn">Start Quiz</button>
+            <div class="setup-actions">
+                <button id="settings-btn" class="secondary-btn">Settings</button>
+                <button id="start-btn">Start Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Settings</h2>
+            <div class="setting-item">
+                <label for="seconds-input">Seconds per question</label>
+                <input type="number" id="seconds-input" value="5" min="1" max="60">
+            </div>
+            <div class="setting-item">
+                <label for="shuffle-toggle">Shuffle questions</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="shuffle-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <button id="save-settings-btn">Save & Close</button>
         </div>
     </div>
 

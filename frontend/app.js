@@ -4,12 +4,21 @@ let timerInterval;
 let answerAccepted = false;
 let isPaused = false;
 let breakTimer = null;
-const TIMER_DURATION = 5000;
-const BREAK_DURATION = 2000; // Changed to 2 seconds
+
+// Settings
+let timerDuration = 5000;
+let shouldShuffle = true;
+const BREAK_DURATION = 2000;
 
 const setupScreen        = document.getElementById('setup-screen');
 const quizScreen         = document.getElementById('quiz-screen');
 const startBtn           = document.getElementById('start-btn');
+const settingsBtn        = document.getElementById('settings-btn');
+const settingsModal      = document.getElementById('settings-modal');
+const saveSettingsBtn    = document.getElementById('save-settings-btn');
+const secondsInput       = document.getElementById('seconds-input');
+const shuffleToggle      = document.getElementById('shuffle-toggle');
+
 const questionsFileInput = document.getElementById('questions-file');
 const answersFileInput   = document.getElementById('answers-file');
 const questionStem       = document.getElementById('question-stem');
@@ -19,6 +28,27 @@ const voiceStatus        = document.getElementById('voice-status');
 const resultStatus       = document.getElementById('result-status');
 const pauseBtn           = document.getElementById('pause-btn');
 const pauseOverlay      = document.getElementById('pause-overlay');
+
+// ── Settings Logic ──────────────────────────────────────────────────────────
+settingsBtn.addEventListener('click', () => {
+    // Sync UI with current settings
+    secondsInput.value = timerDuration / 1000;
+    shuffleToggle.checked = shouldShuffle;
+    settingsModal.classList.remove('hidden');
+});
+
+saveSettingsBtn.addEventListener('click', () => {
+    timerDuration = parseInt(secondsInput.value) * 1000;
+    shouldShuffle = shuffleToggle.checked;
+    settingsModal.classList.add('hidden');
+});
+
+// Close modal if clicking outside content
+settingsModal.addEventListener('click', (e) => {
+    if (e.target === settingsModal) {
+        settingsModal.classList.add('hidden');
+    }
+});
 
 // ── Pause Logic ─────────────────────────────────────────────────────────────
 function togglePause() {
@@ -216,8 +246,10 @@ startBtn.addEventListener('click', async (e) => {
             throw new Error('No valid questions found in the Excel sheets.');
         }
         
-        // Randomize the questions
-        shuffleArray(quizData);
+        // Randomize the questions if setting is enabled
+        if (shouldShuffle) {
+            shuffleArray(quizData);
+        }
         
         startQuiz();
     } catch (error) {
@@ -288,11 +320,11 @@ function startTimer() {
     timerBar.style.transition = 'none';
     timerBar.style.width      = '100%';
     void timerBar.offsetWidth;
-    timerBar.style.transition = `width ${TIMER_DURATION}ms linear`;
+    timerBar.style.transition = `width ${timerDuration}ms linear`;
     timerBar.style.width      = '0%';
     
     let startTime = Date.now();
-    let remaining = TIMER_DURATION;
+    let remaining = timerDuration;
 
     const tick = () => {
         if (isPaused) {
@@ -386,21 +418,6 @@ function handleTimeout() {
     voiceStatus.classList.remove('listening');
 
     setTimeout(startBreak, 2000);
-}
-
-function finishQuiz() {
-    questionStem.innerText    = 'PRACTICE COMPLETE';
-    optionsList.innerHTML     = '';
-    voiceStatus.innerText     = '';
-    resultStatus.innerText    = 'EXCELLENT WORK';
-    resultStatus.className    = 'correct';
-    timerBar.style.transition = 'none';
-    timerBar.style.width      = '0%';
-
-    setTimeout(() => {
-        if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
-        location.reload();
-    }, 4000);
 }
 
 function finishQuiz() {
