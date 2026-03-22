@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App - Competition Prep</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="setup-screen" class="screen">
+        <div class="container">
+            <h1>Quiz Setup</h1>
+            <div class="upload-section">
+                <label for="questions-file">Questions Excel (.xlsx):</label>
+                <input type="file" id="questions-file" accept=".xlsx">
+            </div>
+            <div class="upload-section">
+                <label for="answers-file">Answers Excel (.xlsx):</label>
+                <input type="file" id="answers-file" accept=".xlsx">
+            </div>
+            <button id="start-btn">Start Quiz</button>
+        </div>
+    </div>
+
+    <div id="quiz-screen" class="screen hidden">
+        <div class="full-screen-container">
+            <div id="timer-bar"></div>
+            <div id="question-display">
+                <!-- FIX: Split into stem + options list instead of a single <p> -->
+                <p id="question-stem">Loading...</p>
+                <ul id="options-list"></ul>
+            </div>
+            <div id="status-display">
+                <p id="voice-status">Waiting for voice...</p>
+                <p id="result-status"></p>
+            </div>
+            
+            <button id="pause-btn">PAUSE (Space)</button>
+            
+            <div id="pause-overlay" class="hidden">
+                <div class="pause-content">
+                    <h2>PAUSED</h2>
+                    <p>Press Space or click to resume</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
